@@ -7,6 +7,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Gate;
 
 class PostController extends Controller implements HasMiddleware
 {
@@ -45,7 +46,8 @@ class PostController extends Controller implements HasMiddleware
      * Update the specified resource in storage.
      */
     public function update(UpdatePostRequest $request, Post $post)
-    {        
+    {   
+        Gate::authorize('modify', $post);
         return $post->update($request->validated());
     }
 
@@ -54,6 +56,7 @@ class PostController extends Controller implements HasMiddleware
      */
     public function destroy(Post $post)
     {
+        Gate::authorize('modify', $post);
         return $post->delete();
     }
 }
